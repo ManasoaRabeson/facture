@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ProfoTemplate } from "./profo-template";
 import axios from "axios";
 import { TbLoader } from "react-icons/tb";
+import { Spinner } from "../../../Components/spinner";
 export function NewProforma(){
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true); // optionnel
@@ -35,9 +36,7 @@ export function NewProforma(){
         fetchData();
       }, []);
         
-        if (loading) return  <div className="flex justify-center items-center h-screen">
-        <TbLoader className="animate-spin text-purple-500 text-4xl" />
-        </div>;
+        if (loading) return  <Spinner/>;
         if (error) return <p>Erreur : {error.message}</p>;
     return (
         <>

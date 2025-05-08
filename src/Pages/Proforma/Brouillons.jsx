@@ -1,9 +1,9 @@
 import { Thead } from "../../Components/Table/Headers";
 import dayjs from 'dayjs';
 import 'dayjs/locale/fr';
-import { EntreprisePopoverCell } from "../Facture/liste-facture";
 import DropdownItem from "../../Components/Dropdown/dropdown-item";
 import {  handleApprouveDraft } from "../../Services/service-action";
+import { EntreprisePopoverCell } from "../Facture/list/liste-facture";
 export function Brouillons({data}){
    // console.log(data.invoicesDraft);
     const statusColorList = [

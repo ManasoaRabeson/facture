@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import "dayjs/locale/fr";
 import { ExportPdf } from '../../Services/export-pdf';
 import { InvoiceContext } from '../../Contexts/invoice';
+import { useNavigate } from 'react-router-dom';
 dayjs.locale("fr");
 
 const DropdownItem = ({
@@ -18,7 +19,8 @@ const DropdownItem = ({
   setData
 })=> {
   // const formatDate = (date) => dayjs(date).format("D MMMM YYYY");
-  const { setCurrentPage,setIdInvoice } = useContext(InvoiceContext);
+  const { setIdInvoice } = useContext(InvoiceContext);
+  const navigate = useNavigate();
   const handleClick = async () => {
     if (titre === "Exporter en PDF") {
       ExportPdf(idInvoice);
@@ -41,15 +43,15 @@ const DropdownItem = ({
         alert(error);
       }
     }else if(nature ==="EditerInvoice"){
-      setCurrentPage(10);
       setIdInvoice(idInvoice);
+      navigate("/edit-invoice")
     } else if(nature ==="EditerProforma")
     {
-      setCurrentPage(11);
       setIdInvoice(idInvoice);
+      navigate("/edit-proforma");
     }else {
-      setCurrentPage(6);
       setIdInvoice(idInvoice);
+      navigate("/details" );
     }
   };
 

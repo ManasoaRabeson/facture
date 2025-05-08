@@ -3,13 +3,14 @@ import { useEffect, useState } from "react";
 import dayjs from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import 'dayjs/locale/fr';
-import { TousProforma } from "./TousProforma";
+import { TousProforma } from "./proforma-all";
 import { Converti } from "./Converti";
 import { Brouillons } from "./Brouillons";
-import { VoirDetails } from "../Facture/Details/voir-details";
+import { Spinner } from "../../Components/spinner";
+import useApi from "../../Hooks/Api";
 dayjs.extend(localizedFormat);
 dayjs.locale('fr');
-export function ListeProforma(){
+export function ProformaList(){
 return(
 <>
 <div className="flex flex-col w-full h-full gap-4 ">
@@ -21,38 +22,26 @@ return(
 </div>
 </>
 )}
+
 function FilterNavBar(){
     // const [currentPage , setCurrentPage] = useState(1);
     const [nav,setNav] = useState("proforma-tous");
-    const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(true);
+    //const [data, setData] = useState([]);
     const [filters, setFilters] = useState({
         idEntreprise: 0,
         idInvoiceStatus: 0,
         invoice_number: '',
         invoice_date_pm: ''
       });
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const res = await axios.get(`http://127.0.0.1:8000/api/cfp/factureProfo`,{
-            headers: {
-              Authorization: `Bearer ${sessionStorage.getItem('token')}`
-            }
-          });
-          setData(res.data);
-        } catch (err) {
-          console.error(err);
-        } finally {
-          setLoading(false);
-        }
-      };
-      fetchData();
-    }, []);
-  
+      const { loading,data, callApi } = useApi();
+      useEffect(() => {
+        callApi('/cfp/factureProfo').catch(err => console.error("Erreur API:", err));
+      }, [callApi]);
     if (loading) return (
-        <p>...</p>
+        <Spinner/>
     );
+    console.log(data);
+    
     // const actionClick = (formData) => {
     //     setFilters({
     //       idEntreprise: Number(formData.get('idEntreprise')),
@@ -241,7 +230,7 @@ function ProformaResult({nav,filters}){
   
     if (loading) return (
       <div className="flex justify-center items-center h-10">
-        <div className="animate-spin text-purple-500">⏳</div>
+        <div className="animate-spin text-purple-500"></div>
       </div>
     );
     const renderPage = () => {

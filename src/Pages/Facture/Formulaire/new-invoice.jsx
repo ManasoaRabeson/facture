@@ -2,6 +2,7 @@ import axios from "axios";
 import {  useEffect, useState } from "react";
 import { TbLoader } from 'react-icons/tb';
 import { FactTemplate } from "./fact-template";
+import { Spinner } from "../../../Components/spinner";
 
 export function NewInvoice(){
   
@@ -38,9 +39,7 @@ export function NewInvoice(){
         fetchData();
       }, []);
         
-        if (loading) return  <div className="flex justify-center items-center h-screen">
-        <TbLoader className="animate-spin text-purple-500 text-4xl" />
-        </div>;
+        if (loading) return  <Spinner/>
         if (error) return <p>Erreur : {error.message}</p>;
         
     return(

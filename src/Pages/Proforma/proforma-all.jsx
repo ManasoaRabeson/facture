@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import 'dayjs/locale/fr';
-import { EntreprisePopoverCell } from "../Facture/liste-facture";
+
 import {Thead } from "../../Components/Table/Headers";
 import DropdownItem from '../../Components/Dropdown/dropdown-item';
 import { useEffect, useState } from 'react';
@@ -8,18 +8,8 @@ import axios from 'axios';
 import { Pagination } from '../Pagination';
 import DropdownButton from '../../Components/Dropdown/dropdown-boutton';
 import { handleApprouve, handleCancel, handleSendEmail } from '../../Services/service-action';
+import { EntreprisePopoverCell } from '../Facture/list/liste-facture';
 export function TousProforma({filters}){
-    const statusColorList = [
-        { id: 1, color: 'gray-400' },
-        { id: 2, color: 'rose-500' },
-        { id: 3, color: '[#37718e]' },
-        { id: 4, color: 'teal-600' },
-        { id: 5, color: 'yellow-600' },
-        { id: 6, color: 'red-400' },
-        { id: 7, color: 'green-600' },
-        { id: 8, color: 'red-600' },
-        { id: 9, color: 'rose-500' },
-      ];
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
@@ -79,17 +69,11 @@ export function TousProforma({filters}){
                                 </td>
                                 <td className="p-2 text-base text-gray-500 ">
                                 <span
-                                    className={
-                                    statusColorList.map((colorList) =>
-                                        invoice.status?.idInvoiceStatus === colorList.id
-                                            ? `px-3 py-1 text-sm text-white bg-${colorList.color} rounded-md`
-                                            : ''
-                                        )
-                                        .find((cls) => cls !== '') // Trouve la première classe non vide
-                                        }
-                                    >
-                                    {invoice.status?.invoice_status_name || ''}
-                                </span>
+                                className={
+                                   `px-3 py-1 text-sm text-white bg-${invoice.status_color } rounded-md`}
+                                  >
+                                  {invoice.status?.invoice_status_name || ''}
+                              </span>
                                 </td>
                                 <td className="p-2 text-base text-gray-500">
                                     {new Date(invoice.invoice_date_pm) < new Date() &&

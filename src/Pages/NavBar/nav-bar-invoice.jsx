@@ -1,16 +1,16 @@
-import { useContext, useEffect, useState } from "react";
-import { InvoiceContext } from "../../Contexts/invoice";
+import {  useContext, useEffect, useState } from "react";
 //import useApi from "../../Hooks/Api";
 import axios from "axios";
 import React from 'react';
-import { useNavigate } from "react-router-dom";
-export function NavBarFacture()
-{
-    const { currentPage,setCurrentPage } = useContext(InvoiceContext);
+import { NavLink, useNavigate } from "react-router-dom";
+import { InvoiceContext } from "../../Contexts/invoice";
+export const NavBarFacture = React.memo(function NavBarAccueil() {
+    const {setCurrentPage} = useContext(InvoiceContext);
     const [showModal, setShowModal] = useState(false);
     const navigate = useNavigate();
     const handleClick = (currentPage) =>{
-        setCurrentPage(currentPage);
+        console.log(currentPage);
+        
     }
     const [data,setData] = useState([]);
     //const {data,loading,error,callApi} = useApi();
@@ -50,7 +50,7 @@ export function NavBarFacture()
     
           if (response.data.status === 200) {
             sessionStorage.removeItem('token');
-            navigate('/');
+            navigate('/login');
           } else {
             alert(response.data.message || 'Erreur inconnue');
           }
@@ -72,17 +72,29 @@ export function NavBarFacture()
                         </div>
                         <ul tabIndex="0" className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
                             <li>
-                                <a  className="text-slate-600 hover:text-slate-500 "onClick={() => handleClick(5)}  >
-                                    Dashboard
-                                </a>
+                            <NavLink 
+                            to="/tableau-de-bord"
+                            className={({ isActive }) => 
+                                `text-slate-600 hover:text-slate-500 ${isActive ? 'font-semibold border-b-2 border-[#87388C]' : ''}`
+                            }
+                            >
+                            Dashboard
+                            </NavLink>
                             </li>
                             <li>
-                                <a 
-                                    onClick={() => handleClick(1)} 
-                                    className=" hover:text-slate-500 bg-[#87388C] text-white-slate-600"
+                            <NavLink 
+                                to="/facture" // Assure-toi que ce `to` correspond à la route ciblée
+                                className={({ isActive }) =>
+                                    `px-3 py-2 rounded-md transition-all duration-200 ${
+                                    isActive
+                                        ? 'bg-[#87388C] text-white'
+                                        : 'text-slate-600 hover:text-slate-500'
+                                    }`
+                                }
                                 >
                                 Toutes les factures
-                                </a>
+                                </NavLink>
+
                             </li>
 
                             <li>
@@ -117,55 +129,84 @@ export function NavBarFacture()
 
                     <div className="hidden navbar-center lg:flex">
                         <ul className="flex items-center gap-2 px-1">
-                                    <li>
-                                    <a 
-                                        className={`capitalize text-slate-600 hover:text-slate-500 px-3 py-2 rounded-t-md ${currentPage === 5 ? 'bg-[#87388C]/5 border-b-2 border-[#87388C]' : ''} cursor-pointer`} 
-                                        onClick={() => handleClick(5)} 
-                                    >
-                                    Dashboard
-                                    </a>
-                                    </li>
-                                    <li>
-                                        <a 
-                                            className={`capitalize text-slate-600 hover:text-slate-500 px-3 py-2 rounded-t-md ${currentPage === 1 ? 'bg-[#87388C]/5 border-b-2 border-[#87388C]' : ''} cursor-pointer`} 
-                                            onClick={() => handleClick(1)} 
-                                        >
-                                        Toutes les factures
-                                        </a>
+                        <li>
+                            <NavLink 
+                                to="/tableau-de-bord"
+                                className={({ isActive }) => 
+                                `capitalize text-slate-600 hover:text-slate-500 px-3 py-2 rounded-t-md cursor-pointer ${
+                                    isActive ? 'bg-[#87388C]/5 border-b-2 border-[#87388C]' : ''
+                                }`
+                                }
+                            >
+                                Dashboard
+                            </NavLink>
+                            </li>
 
-                                    </li>
-                                    <li>
-                                        <a 
-                                            className={`capitalize text-slate-600 hover:text-slate-500 px-3 py-2 rounded-t-md ${currentPage === 2 ? 'bg-[#87388C]/5 border-b-2 border-[#87388C]' : ''} cursor-pointer`} 
-                                            onClick={() => handleClick(2)} 
-                                        >
-                                            non payés
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a 
-                                            className={`capitalize text-slate-600 hover:text-slate-500 px-3 py-2 rounded-t-md ${currentPage === 3 ? 'bg-[#87388C]/5 border-b-2 border-[#87388C]' : ''} cursor-pointer`} 
-                                            onClick={() => handleClick(3)} 
-                                        >
-                                           échues
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a 
-                                            className={`capitalize text-slate-600 hover:text-slate-500 px-3 py-2 rounded-t-md ${currentPage === 4 ? 'bg-[#87388C]/5 border-b-2 border-[#87388C]' : ''} cursor-pointer`} 
-                                            onClick={() => handleClick(4)} 
-                                        >
-                                            brouillons
-                                        </a>
-                                    </li>
-                                     <li>
-                                     <a 
-                                            className={`capitalize text-slate-600 hover:text-slate-500 px-3 py-2 rounded-t-md ${currentPage === 8 ? 'bg-[#87388C]/5 border-b-2 border-[#87388C]' : ''} cursor-pointer`} 
-                                            onClick={() => handleClick(8)} 
-                                        >
-                                            proforma
-                                        </a>
-                                    </li>
+                            <li>
+                            <NavLink 
+                                to="/liste" // Assure-toi que cette route est bien distincte
+                                className={({ isActive }) => 
+                                `capitalize text-slate-600 hover:text-slate-500 px-3 py-2 rounded-t-md cursor-pointer ${
+                                    isActive ? 'bg-[#87388C]/5 border-b-2 border-[#87388C]' : ''
+                                }`
+                                }
+                            >
+                                Toutes les factures
+                            </NavLink>
+                            </li>
+
+                            <li>
+                            <NavLink 
+                                to="/non-paye"
+                                className={({ isActive }) => 
+                                `capitalize text-slate-600 hover:text-slate-500 px-3 py-2 rounded-t-md cursor-pointer ${
+                                    isActive ? 'bg-[#87388C]/5 border-b-2 border-[#87388C]' : ''
+                                }`
+                                }
+                            >
+                                non payés
+                            </NavLink>
+                            </li>
+
+                            <li>
+                            <NavLink 
+                                to="/echue"
+                                className={({ isActive }) => 
+                                `capitalize text-slate-600 hover:text-slate-500 px-3 py-2 rounded-t-md cursor-pointer ${
+                                    isActive ? 'bg-[#87388C]/5 border-b-2 border-[#87388C]' : ''
+                                }`
+                                }
+                            >
+                                échues
+                            </NavLink>
+                            </li>
+                            <li>
+                            <NavLink 
+                                to="/brouillons"
+                                className={({ isActive }) => 
+                                `capitalize text-slate-600 hover:text-slate-500 px-3 py-2 rounded-t-md cursor-pointer ${
+                                    isActive ? 'bg-[#87388C]/5 border-b-2 border-[#87388C]' : ''
+                                }`
+                                }
+                            >
+                                brouillons
+                            </NavLink>
+                            </li>
+
+                            <li>
+                            <NavLink 
+                                to="/proforma"
+                                className={({ isActive }) => 
+                                `capitalize text-slate-600 hover:text-slate-500 px-3 py-2 rounded-t-md cursor-pointer ${
+                                    isActive ? 'bg-[#87388C]/5 border-b-2 border-[#87388C]' : ''
+                                }`
+                                }
+                            >
+                                proforma
+                            </NavLink>
+                            </li>
+
+
                          </ul>
                     </div>
                     </div>
@@ -181,21 +222,21 @@ export function NavBarFacture()
                                         </button>
                                         <ul tabIndex="0" className="dropdown-content menu bg-base-100 rounded-box z-[1] w-[220px] p-2 shadow">
                                             <li>
-                                                <a  onClick={() => handleClick(7)} className="capitalize text-slate-600 hover:text-slate-600 cursor-pointer">
+                                                <NavLink to="/new-invoice"   className="capitalize text-slate-600 hover:text-slate-600 cursor-pointer">
                                                     <div className="w-[16px]">
                                                         <i className="fa-solid fa-file-invoice"></i>
                                                     </div>
                                                     facture
-                                                </a>
+                                                </NavLink>
                                             </li>
                                             <li>
                                                 {/*href="https://factures.forma-fusion.com/cfp/factureProfo/create"*/}
-                                                <a  onClick={() => handleClick(9)}  className="capitalize text-slate-600 hover:text-slate-600 cursor-pointer">
+                                                <NavLink  to="/new-proforma"  className="capitalize text-slate-600 hover:text-slate-600 cursor-pointer">
                                                     <div className="w-[16px]">
                                                         <i className="fa-solid fa-file-invoice"></i>
                                                     </div>
                                                     facture proforma
-                                                </a>
+                                                </NavLink>
                                             </li>
                                         </ul>
                                     </div>
@@ -422,7 +463,7 @@ export function NavBarFacture()
       )}
         </>
     )
-}
+});
 
 
 

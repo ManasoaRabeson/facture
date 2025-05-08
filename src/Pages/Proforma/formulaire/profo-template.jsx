@@ -5,8 +5,9 @@ import { Count } from "../../Facture/Formulaire/count";
 import { AjoutClient } from "../../Facture/Formulaire/AjoutClient";
 import { AjoutFacture } from "../../Footer/AjoutFacture";
 import { InvoiceContext } from "../../../Contexts/invoice";
+import { useNavigate } from "react-router-dom";
 export function ProfoTemplate({data,IsProforma,dataProfil}){
-    const { setCurrentPage,setIdInvoice } = useContext(InvoiceContext);
+    const {setIdInvoice } = useContext(InvoiceContext);
 const [idEtp, setIdEtp] = useState(null);
 const [sumFolder, setSumFolder] =useState(0);
 const [sumProject, setSumProject] =useState(0);
@@ -42,6 +43,7 @@ useEffect(() => {
   
 // calcul reduction
 const [openDiv,setOpenDiv] = useState(false);
+const navigate = useNavigate();
 const handleSubmit = async(formData) => {
     try {
         const response = await axios.post('http://127.0.0.1:8000/api/cfp/factures', formData,{
@@ -50,7 +52,7 @@ const handleSubmit = async(formData) => {
           }
         });
         setIdInvoice(response.data.idInvoice);
-        setCurrentPage(6);
+        navigate("/details");
       } catch (error) {
         if (error.response && error.response.status === 422) {
             setErrors(error.response.data.errors);
@@ -84,16 +86,16 @@ return(
                                 <input type="hidden" name="idTypeFacture" id="idTypeFacture" value="2" />
                             </div>
                             <div class="inline-flex items-center gap-4">
-                                <div class="flex justify-end w-1/3">
-                                <label for="invoice_number" class="flex-1 text-base font-semibold text-right text-gray-500">
-                                    <span class="text-lg text-red-500">* </span>
+                                <div className="flex justify-end w-1/3">
+                                <label  className="flex-1 text-base font-semibold text-right text-gray-500">
+                                    <span className="text-lg text-red-500">* </span>
                                     Adresse de facturation :
                                 </label>
                                 </div>
-                            <div class="flex flex-col justify-start w-2/3">
-                                <select name="idCompany" id="idCompany" class="p-2 border rounded-lg focus:outline-none focus:ring-purple-500 focus:ring-1">
+                            <div className="flex flex-col justify-start w-2/3">
+                                <select name="idCompany" id="idCompany" className="p-2 border rounded-lg focus:outline-none focus:ring-purple-500 focus:ring-1">
                                     {dataProfil.companies.map(company =>(
-                                    <option value={company.id}>Nom : {company.name} 
+                                    <option key={company.id} value={company.id}>Nom : {company.name} 
                                     - NIF  : {company.nif}
                                    </option>
                                     ))}

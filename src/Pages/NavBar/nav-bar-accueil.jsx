@@ -1,4 +1,5 @@
-export function NavBarAccueil() {
+import React from "react";
+export const NavBarAccueil = React.memo(function NavBarAccueil() {
     return (
         <>
                 <div className="w-full du-navbar">
@@ -118,4 +119,4 @@ export function NavBarAccueil() {
     
         </>
     );
-}
+});

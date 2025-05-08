@@ -5,6 +5,7 @@ import React from "react";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
 import { InvoiceContext } from "../../../Contexts/invoice";
+import { Spinner } from "../../../Components/spinner";
 dayjs.locale("fr");
 export function VoirDetails(){
   const { idInvoice} = useContext(InvoiceContext);
@@ -34,13 +35,13 @@ export function VoirDetails(){
           };
         fetchData();
       }, [idInvoice]);
-        if (loading) return  <div className="flex justify-center items-center h-screen">
-        </div>;
+        if (loading) return  <Spinner/>
         if (error) return <p>Erreur : {error.message}</p>;
-      console.log(data);
+
       
     return(
         <>
+
             <div className="flex flex-col w-full sm:w-[1280px] lg:w-full gap-3 px-8">
               <HeaderInvoice data={data} />
               <div className="border-t-[1px] border-gray-100 rounded-sm w-full bg-white py-10 flex flex-col gap-6">
@@ -397,11 +398,8 @@ export function VoirDetails(){
                               </div>
                             </div>
                           </div>
-
               </div>
             </div>
-          
-           
         </>
     )
 }

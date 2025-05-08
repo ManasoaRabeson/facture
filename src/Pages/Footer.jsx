@@ -1,4 +1,5 @@
-export function Footer(){
+import React from "react";
+export const Footer = React.memo(function NavBarAccueil() {
     return(
         <>
         <footer className="bg-white border-t border-gray-100">
@@ -16,4 +17,4 @@ export function Footer(){
                 </footer>
         </>
     )
-}
+});

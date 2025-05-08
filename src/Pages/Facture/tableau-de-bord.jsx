@@ -1,14 +1,20 @@
 import { useEffect } from "react";
 import { TbLoader } from 'react-icons/tb';
 import useApi from "../../Hooks/Api";
+import { Spinner } from "../../Components/spinner";
 export function TableauDeBord(){
+    return(
+        <>
+        <TableauDeBordContent/>
+        </>
+    )
+}
+ function TableauDeBordContent(){
     const { loading, error, data, callApi } = useApi();
     useEffect(()=>{
         callApi('/dashboard');
       },[callApi]);
-      if (loading) return  <div className="flex justify-center items-center h-screen">
-      <TbLoader className="animate-spin text-purple-500 text-4xl" />
-      </div>;
+      if (loading) return <Spinner/>
       if (error) return <p>Erreur : {error.message}</p>; 
       //console.log(data);
       if (!data) return null;    

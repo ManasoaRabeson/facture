@@ -9,59 +9,48 @@
 //     //9 : nouveau proforma (formulaire)
 //     //10 : edit facture
 //     // 11 : edit proforma
-import { Footer } from "../Footer";
-import { NavBarFacture } from "../NavBar/nav-bar-invoice";
-import { ListeFacture } from "./liste-facture";
-import { TableauDeBord } from "./tableau-de-bord";
-import { VoirDetails } from "./Details/voir-details";
-import { NewInvoice } from "./Formulaire/new-invoice";
-import { ListeProforma } from "../Proforma/proforma-list";
-import { NewProforma } from "../Proforma/formulaire/new-proforma";
-import { useContext } from "react";
-import { InvoiceContext, InvoiceProvider } from "../../Contexts/invoice";
-import { EditInvoice } from "./Formulaire/edit-invoice";
-import { EditProforma } from "../Proforma/formulaire/edit-proforma";
-import { GererProfil } from "../Profil/gerer-profil";
-
-export function Index() {
+import { ListeFacture } from "./list/liste-facture";
+export function Index({idInvoice}) {
   return (
-    <InvoiceProvider>
-      <Content />
-    </InvoiceProvider>
+      <>
+      <ListeFacture idInvoice={idInvoice}/>
+      </>
   );
-}
-function Content() {
-  const { currentPage } = useContext(InvoiceContext);
-  const renderPage = () => {
-    switch (currentPage) {
-      case 1:case 2:case 3: case 4:
-        return <ListeFacture />;
-      case 5:
-        return <TableauDeBord />;
-      case 6:
-        return <VoirDetails />;
-      case 7:
-        return <NewInvoice />;
-      case 8:
-        return <ListeProforma />;
-      case 9:
-        return <NewProforma />;
-      case 10 : 
-      return <EditInvoice/>
-      case 11 : 
-      return <EditProforma/>
-      case  100 : 
-      return <GererProfil/> 
+ }
+// function Content() {
+//   // const { currentPage } = useContext(InvoiceContext);
+//   // const renderPage = () => {
+//   //   switch (currentPage) {
+//   //     case 1:case 2:case 3: case 4:
+//   //       return <ListeFacture />;
+//   //     case 5:
+//   //       return <TableauDeBord />;
+//   //     case 6:
+//   //       return <VoirDetails />;
+//   //     case 7:
+//   //       return <NewInvoice />;
+//   //     case 8:
+//   //       return <ListeProforma />;
+//   //     case 9:
+//   //       return <NewProforma />;
+//   //     case 10 : 
+//   //     return <EditInvoice/>
+//   //     case 11 : 
+//   //     return <EditProforma/>
+//   //     case  100 : 
+//   //     return <GererProfil/> 
+//   //   }
+//   // };
 
-    }
-  };
+//   return (
+//     // <div className="flex flex-col min-h-screen bg-white">
+//     //   <NavBarFacture />
+//     //   <div className="flex-grow pt-20 lg:pt-20">{renderPage()}</div>
+//     //   <Footer />
+//     // </div>
+//     <>
 
-  return (
-    <div className="flex flex-col min-h-screen bg-white">
-      <NavBarFacture />
-      <div className="flex-grow pt-20 lg:pt-20">{renderPage()}</div>
-      <Footer />
-    </div>
-  );
-}
+//     </>
+//   );
+// }
 // const { setCurrentPage, setIdInvoice, currentPage } = useContext(InvoiceContext);

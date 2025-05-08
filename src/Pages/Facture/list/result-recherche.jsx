@@ -1,20 +1,20 @@
 import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import {useContext, useEffect, useState } from "react";
 import dayjs from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import 'dayjs/locale/fr';
-import { LineProgress } from "../../Components/line-progress";
-import { EntreprisePopoverCell } from "./liste-facture";
-import {Pagination} from "../Pagination";
+import { LineProgress } from "../../../Components/line-progress";
+import {Pagination} from "../../Pagination";
 dayjs.extend(localizedFormat);
-import {DropdownButton} from "../../Components/Dropdown/dropdown-boutton";
-import DropdownItem from "../../Components/Dropdown/dropdown-item";
-import { PaiementModal } from "../../Components/Modals/paiment-modal";
-import { handleApprouve, handleCancel, handleSendEmail } from "../../Services/service-action";
-import { InvoiceContext } from "../../Contexts/invoice";
+import {DropdownButton} from "../../../Components/Dropdown/dropdown-boutton";
+import DropdownItem from "../../../Components/Dropdown/dropdown-item";
+import { PaiementModal } from "../../../Components/Modals/paiment-modal";
+import { handleApprouve, handleCancel, handleSendEmail } from "../../../Services/service-action";
+import { EntreprisePopoverCell } from "./liste-facture";
+import { InvoiceContext } from "../../../Contexts/invoice";
 dayjs.locale('fr');
-export function ResultCherche({filters}){
-  const { currentPage } = useContext(InvoiceContext);
+export function ResultCherche({filters,idInvoice}){
+  const { isPaid} = useContext(InvoiceContext);
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true); // optionnel
     const [error, setError] = useState(null);     // optionnel
@@ -26,15 +26,15 @@ export function ResultCherche({filters}){
     //renitialiser le pagination si la page change
     useEffect(()=>{
       setPage(1)
-    },[currentPage]);
+    },[idInvoice]);
 // console.log(sessionStorage.getItem('token'));
 
     //liste de facture par idPage
     useEffect(() => {
-      const fetchData = async (page, currentPage) => {
+      const fetchData = async (page, idInvoice) => {
         try {
           setLoading(true);
-          const res = await axios.get(`http://127.0.0.1:8000/api/cfp/factures/id/${currentPage}`, {
+          const res = await axios.get(`http://127.0.0.1:8000/api/cfp/factures/id/${idInvoice}`, {
             params: {
               page,
               idEntreprise: filters.idEntreprise,
@@ -73,8 +73,8 @@ export function ResultCherche({filters}){
         }
       };
     
-      fetchData(page, currentPage);
-    }, [filters.idEntreprise, filters.idInvoiceStatus, filters.invoice_number, filters.invoice_date_pm, page, currentPage]);
+      fetchData(page, idInvoice);
+    }, [filters.idEntreprise, filters.idInvoiceStatus, filters.invoice_number, filters.invoice_date_pm, page, idInvoice,isPaid]);
     if (loading) return <LineProgress/>
     if (error) return <p>Erreur : {error.message}</p>;
     // let vari = JSON.parse(sessionStorage.getItem("user")).id;

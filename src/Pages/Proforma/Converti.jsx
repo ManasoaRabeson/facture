@@ -1,7 +1,7 @@
 import { Thead } from "../../Components/Table/Headers";
 import dayjs from 'dayjs';
 import 'dayjs/locale/fr';
-import { EntreprisePopoverCell } from "../Facture/liste-facture";
+import { EntreprisePopoverCell } from "../Facture/list/liste-facture";
 export function Converti({data}){
     const statusColorList = [
         { id: 1, color: 'gray-400' },

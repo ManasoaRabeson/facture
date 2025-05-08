@@ -1,18 +1,18 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useEffect, useState } from "react";
 export const InvoiceContext = createContext();
 export const InvoiceProvider = ({ children }) => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [idInvoice, setIdInvoice] = useState(null);
-  const [pageRecent, setPageRecent] = useState();
-
+  const [isPaid, setIsPaid] = useState(0);
+  const [idInvoice, setIdInvoice] = useState(() => {
+    return sessionStorage.getItem('id') || null;
+  });
+  const [pageRecent] = useState();
   useEffect(() => {
-    if (currentPage !== 6 ) {
-      setPageRecent(currentPage);
+    if (idInvoice) {
+      sessionStorage.setItem('id', idInvoice);
     }
-  }, [currentPage]);
-
+  }, [idInvoice]);
   return (
-    <InvoiceContext.Provider value={{ currentPage, setCurrentPage, idInvoice, setIdInvoice, pageRecent }}>
+    <InvoiceContext.Provider value={{ isPaid, setIsPaid, idInvoice, setIdInvoice, pageRecent }}>
       {children}
     </InvoiceContext.Provider>
   );

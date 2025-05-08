@@ -1,11 +1,14 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import axios from "axios";
+import { InvoiceContext } from "../../Contexts/invoice";
+import PaymentSuccessModal from "./payment-sucess";
 
-export function PaiementModal({ invoice, data, closeModal ,setData,index}) {
+export function PaiementModal({ invoice, data, closeModal }) {
   const [successMessageVisible, setSuccessMessageVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [message, setMesssage] = useState();
-  console.log(data);
+  const { setIsPaid} = useContext(InvoiceContext);
+  //console.log(data);
   
   const handleSubmit = async (formData) => {
     try {
@@ -15,89 +18,92 @@ export function PaiementModal({ invoice, data, closeModal ,setData,index}) {
         }
         });
         if(response.data.status === 200) {
-          if (data?.invoices.data[index].payments.length === 0) {
-            window.location.reload();
-          }else{
-            setData(prevData => ({
-              ...prevData,
-              invoices: {
-                ...prevData.invoices,
-                data: prevData.invoices.data.map((invoice, i) => {
-                  if (i === index) {
-                    const lastId = invoice.payments.length > 0
-                      ? Math.max(...invoice.payments.map(p => p.id || 0))
-                      : 0;
+        //   if (data?.invoices.data[index].payments.length === 0) {
+        //     window.location.reload();
+        //   }else{
+        //     setData(prevData => ({
+        //       ...prevData,
+        //       invoices: {
+        //         ...prevData.invoices,
+        //         data: prevData.invoices.data.map((invoice, i) => {
+        //           if (i === index) {
+        //             const lastId = invoice.payments.length > 0
+        //               ? Math.max(...invoice.payments.map(p => p.id || 0))
+        //               : 0;
                     
-                    const payment_method_id = Number(formData.get("payment_method_id"));
-                    let paiement_name = "";
+        //             const payment_method_id = Number(formData.get("payment_method_id"));
+        //             let paiement_name = "";
                     
-                    switch (payment_method_id) {
-                      case 1:
-                        paiement_name = "Chèque";
-                        break;
-                      case 2:
-                        paiement_name = "Virement bancaire";
-                        break;
-                      case 3:
-                        paiement_name = "Espèce";
-                        break;
-                      case 4: 
-                        paiement_name = "Mobile Money";
-                        break;
-                    }
+        //             switch (payment_method_id) {
+        //               case 1:
+        //                 paiement_name = "Chèque";
+        //                 break;
+        //               case 2:
+        //                 paiement_name = "Virement bancaire";
+        //                 break;
+        //               case 3:
+        //                 paiement_name = "Espèce";
+        //                 break;
+        //               case 4: 
+        //                 paiement_name = "Mobile Money";
+        //                 break;
+        //             }
                     
-                    const newPayment = {
-                      id: lastId + 1,
-                      amount: formData.get("amount"),
-                      payment_date: formData.get("payment_date"),
-                      payment_method_id: payment_method_id,
-                      payment_bank_id: formData.get("payment_bank_id"),
-                      payment_description: formData.get("payment_description"),
-                      created_at: new Date().toISOString(),
-                      updated_at: new Date().toISOString(),
-                      mode_paiement: {
-                        idTypePm: payment_method_id,
-                        pm_type_name: paiement_name
-                      }
-                    };
+        //             const newPayment = {
+        //               id: lastId + 1,
+        //               amount: formData.get("amount"),
+        //               payment_date: formData.get("payment_date"),
+        //               payment_method_id: payment_method_id,
+        //               payment_bank_id: formData.get("payment_bank_id"),
+        //               payment_description: formData.get("payment_description"),
+        //               created_at: new Date().toISOString(),
+        //               updated_at: new Date().toISOString(),
+        //               mode_paiement: {
+        //                 idTypePm: payment_method_id,
+        //                 pm_type_name: paiement_name
+        //               }
+        //             };
           
-                    const newPayments = [...invoice.payments, newPayment];
+        //             const newPayments = [...invoice.payments, newPayment];
                     
-                    const total = parseFloat(invoice.invoice_total_amount) || 0;
-                    const paid = newPayments.reduce((acc, p) => {
-                      const amount = parseFloat(p.amount) || 0;
-                      return acc + amount;
-                    }, 0);
-                    const remaining = total - paid;
+        //             const total = parseFloat(invoice.invoice_total_amount) || 0;
+        //             const paid = newPayments.reduce((acc, p) => {
+        //               const amount = parseFloat(p.amount) || 0;
+        //               return acc + amount;
+        //             }, 0);
+        //             const remaining = total - paid;
                     
-                    const isFullyPaid = remaining <= 0;
+        //             const isFullyPaid = remaining <= 0;
                     
-                    return {
-                      ...invoice,
-                      payments: newPayments,
-                      remaining: remaining,
-                      invoice_status: isFullyPaid ? 4 : 5,
-                      status: {
-                        idInvoiceStatus: isFullyPaid ? 4 : 5,
-                        invoice_status_name: isFullyPaid ? "Payé" : "Partiel"
-                      },
-                      status_color : isFullyPaid ?  "teal-600" : "yellow-600" 
-                    };
-                  } else {
-                    return invoice;
-                  }
-                })
-              }
-            }));
-          }       
+        //             return {
+        //               ...invoice,
+        //               payments: newPayments,
+        //               remaining: remaining,
+        //               invoice_status: isFullyPaid ? 4 : 5,
+        //               status: {
+        //                 idInvoiceStatus: isFullyPaid ? 4 : 5,
+        //                 invoice_status_name: isFullyPaid ? "Payé" : "Partiel"
+        //               },
+        //               status_color : isFullyPaid ?  "teal-600" : "yellow-600" 
+        //             };
+        //           } else {
+        //             return invoice;
+        //           }
+        //         })
+        //       }
+        //     }));
+        //   }       
+        // }
+        setMesssage( response.data.message);
+        setSuccessMessageVisible(true);
+        setErrorMessage(""); // Réinitialiser les erreur
+        setTimeout(() => {
+          setSuccessMessageVisible(false);
+          closeModal();
+          setIsPaid(prev => prev + 1);
+        }, 3000);
+        
         }
-      setMesssage( response.data.message);
-      setSuccessMessageVisible(true);
-      setErrorMessage(""); // Réinitialiser les erreur
-      setTimeout(() => {
-        setSuccessMessageVisible(false);
-        closeModal();
-      }, 3000);
     } catch (error) {
       console.error('Erreur d’envoi :', error.response?.data || error.message);
       setErrorMessage('Erreur lors de l\'envoi des données.');
@@ -204,16 +210,27 @@ export function PaiementModal({ invoice, data, closeModal ,setData,index}) {
     )}
       {/* Message de succès */}
   {successMessageVisible && (
-    <div className="validation-message success" style={{ color: 'green', backgroundColor: '#e0f7e0', padding: '10px', borderRadius: '5px', marginTop: '10px' }}>
-     {message}
-    </div>
+    <PaymentSuccessModal message={message}/>
   )}
 
   {/* Message d'erreur */}
   {errorMessage && (
-    <div className="validation-message error" style={{ color: 'red', backgroundColor: '#fbe9e7', padding: '10px', borderRadius: '5px', marginTop: '10px' }}>
-      {errorMessage}
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="bg-white rounded-2xl p-6 max-w-sm w-full text-center shadow-lg">
+      <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-red-100 rounded-full">
+        <svg
+          className="w-8 h-8 text-red-600"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </div>
+      <h2 className="text-2xl font-semibold text-red-600 mb-2">Paiement échoué</h2>
     </div>
+  </div>
   )}
 
 </>

@@ -4,9 +4,8 @@ import axios from 'axios';
 const useApi = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [data, setData] = useState(null);  // Initialisation à null pour plus de clarté
+  const [data, setData] = useState([]);  // Initialisation à null pour plus de clarté
   const apiPrefix = 'http://127.0.0.1:8000/api';
-
   const callApi = useCallback(
     async (
       endpoint,
@@ -19,14 +18,13 @@ const useApi = () => {
     ) => {
       setLoading(true);
       setError(null);
-      setData([]);
-
-      // Ajout du token d'authentification dans les headers si présent
+      setData([]); // ou null selon ton usage
+  
       const token = sessionStorage.getItem('token');
       if (token) {
         headers.Authorization = `Bearer ${token}`;
       }
-
+  
       try {
         const response = await axios({
           method,
@@ -36,16 +34,18 @@ const useApi = () => {
           ...options,
         });
         setData(response.data);
+        return response.data; // ✅ On retourne les données ici
       } catch (err) {
-        setError(
-          err.response?.data?.message || err.message || 'Une erreur est survenue'
-        );
+        const message = err.response?.data?.message || err.message || 'Une erreur est survenue';
+        setError(message);
+        throw err; // ✅ Important pour que l'appelant sache qu'il y a une erreur
       } finally {
         setLoading(false);
       }
     },
     []
   );
+  
 
   return { loading, error, data, callApi };
 };

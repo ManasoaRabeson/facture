@@ -1,7 +1,7 @@
 // import { useEffect } from "react";
 // import useApi from "../../../Hooks/Api";
 
-export function SearchBar({  data,filters, setFilters }) {
+export function SearchBar({data,filters, setFilters }) {
 
   const handleReset = () => {
     setFilters({

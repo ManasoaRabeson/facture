@@ -1,11 +1,13 @@
-import { useContext } from "react";
-import { InvoiceContext } from "../../Contexts/invoice";
-
+ import { useContext } from "react";
+ import { InvoiceContext } from "../../Contexts/invoice";
+import { useNavigate } from "react-router-dom";
 export const DropdownButton = ({ type,titre, first, id, children ,idInvoice}) => {
-  const { setCurrentPage,setIdInvoice } = useContext(InvoiceContext);
+const {setIdInvoice } = useContext(InvoiceContext);
+  const navigate = useNavigate();
   const handleClick = () =>{
-      setCurrentPage(6) ;
-      setIdInvoice(idInvoice);
+    setIdInvoice(idInvoice);
+    navigate("/details" );
+      // setCurrentPage(6) ;
     }
   if (type === 'simple') {
       return (

@@ -1,13 +1,21 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { MasterContent } from "../../Components/content/master-content";
 
 const LoadingScreen = () => (
     <div className="fixed top-0 left-0 w-full h-full bg-black/50 flex items-center justify-center z-50">
         <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-500"></div>
     </div>
 );
-export function FormLogin() {
+export function LoginHome(){
+    return <>
+            <MasterContent>
+                <FormLogin/>
+            </MasterContent>
+            </>
+}
+ function FormLogin() {
     const [isSubmitting,setIsSubmitting] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -32,7 +40,7 @@ export function FormLogin() {
             if (response.data.status === 200) {
                 sessionStorage.setItem("user", JSON.stringify(response.data.user));
                 sessionStorage.setItem("token", response.data.token);
-                navigate("/facture");
+                navigate("/liste");
             } else {
                 setMessage(response.data.message || "Identifiants incorrects");
             }
@@ -106,7 +114,7 @@ export function FormLogin() {
                             </div>
                         </form>
                         <p className="pt-4 text-lg text-[#a462a4] underline font-bold hover:text-[#9d4ed4] hover:underline-offset-4 text-center">
-                            <Link to="/user/register">Pas encore de compte ? Inscrivez-vous</Link>
+                            <Link to="/register">Pas encore de compte ? Inscrivez-vous</Link>
                         </p>
                     </div>
                 </div>

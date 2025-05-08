@@ -3,6 +3,7 @@ import {  useContext, useEffect, useState } from "react";
 import { TbLoader } from 'react-icons/tb';
 import { InvoiceContext } from "../../../Contexts/invoice";
 import { FactTemplate } from "../../Facture/Formulaire/fact-template";
+import { Spinner } from "../../../Components/spinner";
 
 export function EditProforma(){
   
@@ -37,9 +38,7 @@ export function EditProforma(){
           };
         fetchData();
       }, [idInvoice]);
-        if (loading) return  <div className="flex justify-center items-center h-screen">
-        <TbLoader className="animate-spin text-purple-500 text-4xl" />
-        </div>;
+        if (loading) return  <Spinner/>
         if (error) return <p>Erreur : {error.message}</p>;   
     return(
         <>

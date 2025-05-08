@@ -1,56 +1,52 @@
-import {  useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import dayjs from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import 'dayjs/locale/fr';
+import { SearchBar } from "../Formulaire/search-bar";
+import { ResultCherche } from "./result-recherche";
+import useApi from "../../../Hooks/Api";
+
 dayjs.extend(localizedFormat);
 dayjs.locale('fr');
 
-
-import { SearchBar } from "./Formulaire/search-bar";
-import { ResultCherche } from "./result-recherche";
-import useApi from "../../Hooks/Api";
-export function ListeFacture(){
+export function ListeFacture({ idInvoice }) {
   const [filters, setFilters] = useState({
     idEntreprise: 0,
     idInvoiceStatus: 0,
     invoice_number: '',
     invoice_date_pm: ''
   });
-  const {data, callApi} = useApi();
+
+  const { data, callApi } = useApi();
+
   useEffect(() => {
-      callApi('/cfp/factures/id/1');
+    callApi('/cfp/factures/id/1');
   }, [callApi]);
-  // Action handler pour React 19
-  // const handleFormAction = (formData) => {
-  //   setFilters({
-  //     idEntreprise: Number(formData.get('idEntreprise')),
-  //     idInvoiceStatus: Number(formData.get('invoice_status')),
-  //     invoice_number: formData.get('invoice_number'),
-  //     invoice_date_pm: formData.get('invoice_date_pm')
-  //   });
-  //   // setIdEtp(formData.get('idEntreprise')) ;
-  //   // setIdInvoiceStatus(formData.get('invoice_status'));
-  //   // setInvoice_number(formData.get('invoice_number'));
-  //   // setInvoice_date_pm(formData.get('invoice_date_pm'));
-  // };
+
+  const memoizedFilters = useMemo(() => filters, [filters]);
+
   return (
     <div className="flex flex-col w-full h-full gap-4">
       <div className="sm:w-[1024px] lg:w-full h-full bg-white">
         <div className="flex flex-col w-full gap-6 mt-3">
           <SearchBar
-            // actionClick={handleFormAction} 
-            filters={filters} setFilters={setFilters} data={data}
+            filters={filters}
+            setFilters={setFilters}
+            data={data}
           />
           <ResultCherche
-          filters={filters}/>
+            filters={memoizedFilters} 
+            idInvoice={idInvoice} 
+          />
         </div>
       </div>
     </div>
   );
 }
 
- export const EntreprisePopoverCell = ({ invoice }) => {
+export const EntreprisePopoverCell = React.memo(({ invoice }) => {
   const entreprise = invoice.entreprise_from_vcollaboration ?? invoice.entreprise_from_vcfp_all;
+
   return (
     <td className="cursor-pointer hover:underline">
       <HoverPopover
@@ -103,10 +99,11 @@ export function ListeFacture(){
       </HoverPopover>
     </td>
   );
-};
+});
 
-const HoverPopover = ({ button, children }) => {
+const HoverPopover = React.memo(({ button, children }) => {
   const [open, setOpen] = useState(false);
+
   return (
     <div
       className="relative cursor-pointer"
@@ -121,8 +118,4 @@ const HoverPopover = ({ button, children }) => {
       )}
     </div>
   );
-};
-
-
-
-
+});
